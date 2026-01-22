@@ -65,34 +65,33 @@ document.addEventListener("click", async (e) => {
     const text = input.value.trim();
     if (!text) return;
 
-    const { error } = await supabase.from("comments").insert([
-      {
-        post_id: postId,
-        username,
-        text,
-      },
-    ]);
+    const { error } = await supabase
+      .from("comments")
+      .insert([{ post_id: postId, username, text }]);
     if (error) return console.error(error);
 
     input.value = "";
     loadComments();
+    return; 
   }
 
-  const confirmDelete = confirm("Are you sure you want to delete this post?");
-  if (!confirmDelete) return;
+  if (e.target.id === "deletePost") {
+    const confirmDelete = confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
 
-  e.target.innerText = "Deleting...";
-  e.target.disabled = true;
+    e.target.innerText = "Deleting...";
+    e.target.disabled = true;
 
-  const { error } = await supabase.from("posts").delete().eq("id", postId);
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
 
-  if (error) {
-    console.error("Delete failed:", error);
-    alert("Error: " + error.message);
-    e.target.innerText = "🗑️ Delete Photo";
-    e.target.disabled = false;
-  } else {
-    window.location.href = "index.html";
+    if (error) {
+      console.error("Delete failed:", error);
+      alert("Error: " + error.message);
+      e.target.innerText = "🗑️ Delete Photo";
+      e.target.disabled = false;
+    } else {
+      window.location.href = "index.html";
+    }
   }
 });
 
