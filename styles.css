@@ -47,13 +47,12 @@ header h1 {
   transform: translateY(-2px);
 }
 
-/* --- Masonry Gallery Layout (Using CSS Grid) --- */
 main {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+  display: flex;
+  flex-direction: column; /* stack cards vertically */
+  gap: 1.25rem;           /* space between cards */
   padding: 1.25rem;
-  max-width: 1200px;
+  max-width: 600px;       /* optional: limit width for readability */
   margin: 0 auto;
 }
 
