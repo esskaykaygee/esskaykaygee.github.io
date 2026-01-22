@@ -260,10 +260,8 @@ form button {
     font-size: 1.6rem;
   }
 }
-
 @media (max-width: 500px) {
 
-  /* Header */
   header {
     flex-direction: column;
     gap: 0.5rem;
@@ -275,19 +273,22 @@ form button {
     margin-bottom: 0;
   }
 
-  /* Gallery */
   main {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
     gap: 0.75rem;
-    padding: 0.75rem;
   }
 
-  /* Buttons */
+  .card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   .btn {
     width: 100%;
-    max-width: none;
   }
 
-  /* Photo Detail & Forms */
   #photoDetail,
   form {
     width: 100%;
@@ -295,7 +296,6 @@ form button {
     padding: 1rem;
   }
 
-  /* Login */
   .login-container {
     width: 90%;
     margin: 8vh auto;
