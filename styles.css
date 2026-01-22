@@ -136,10 +136,16 @@ form button {
   gap: 1rem;
 }
 
-#photoDetail img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
+#photoDetail {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 15px rgba(255, 121, 198, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .posted-by {
@@ -192,7 +198,6 @@ form button {
 #addCommentBtn:hover { background: #ff4fa1; }
 #deletePost:hover { background: #fff0f7; }
 
-/* --- Login Page --- */
 .login-container {
   max-width: 400px;
   margin: 15vh auto;
