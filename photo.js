@@ -77,16 +77,32 @@ document.addEventListener("click", async (e) => {
     loadComments();
   }
 
-  // Delete post (only on this page)
-  if (e.target.id === "deletePost") {
-    const confirmDelete = confirm("Are you sure you want to delete this post?");
-    if (!confirmDelete) return;
+if (e.target.id === "deletePost") {
+  const confirmDelete = confirm("Are you sure you want to delete this post?");
+  if (!confirmDelete) return;
 
-    const { error } = await supabase.from("posts").delete().eq("id", postId);
-    if (error) return console.error(error);
+  const { error: commentError } = await supabase
+    .from("comments")
+    .delete()
+    .eq("post_id", postId);
 
-    window.location.href = "index.html";
+  if (commentError) {
+    console.error("Error deleting comments:", commentError);
+    return;
   }
+
+  const { error: postError } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", postId);
+
+  if (postError) {
+    console.error("Error deleting post:", postError);
+    return;
+  }
+
+  window.location.href = "index.html";
+}
 });
 
 loadPost();
