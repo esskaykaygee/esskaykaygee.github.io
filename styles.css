@@ -1,3 +1,4 @@
+/* --- Global Styles --- */
 body {
   font-family: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   margin: 0;
@@ -14,6 +15,9 @@ header {
   padding: 1rem 1.5rem;
   background: #fff;
   border-bottom: 2px solid #ff79c6; 
+  position: sticky; /* Keeps header at top while scrolling */
+  top: 0;
+  z-index: 1000;
 }
 
 header h1 {
@@ -41,19 +45,25 @@ header h1 {
   transform: translateY(-2px);
 }
 
+/* --- Masonry Gallery Layout --- */
 main {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
+  column-count: 3; /* 3 columns on desktop */
+  column-gap: 1.25rem;
+  padding: 1.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .card {
   background: #fff;
   border-radius: 20px;
-  overflow: hidden;
+  margin-bottom: 1.25rem; /* Space between vertical cards */
+  break-inside: avoid; /* Prevents card from splitting across columns */
+  display: inline-block; /* Required for column-count masonry */
+  width: 100%;
   box-shadow: 0 6px 15px rgba(255, 121, 198, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -63,19 +73,20 @@ main {
 
 .card img {
   width: 100%;
+  height: auto; 
   display: block;
-  border-bottom: 3px solid #ff79c6;
-  height: auto;
+  border-bottom: 2px solid #ff79c6;
 }
 
 .card p {
   padding: 0.75rem;
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #555;
   text-align: center;
 }
 
+/* --- Forms (Post Page) --- */
 form {
   display: flex;
   flex-direction: column;
@@ -85,15 +96,14 @@ form {
   border-radius: 20px;
   box-shadow: 0 6px 15px rgba(255, 121, 198, 0.1);
   max-width: 500px;
-  margin: 1rem auto;
+  margin: 2rem auto;
 }
 
 input[type="text"],
 input[type="file"],
-textarea,
-button {
+textarea {
   font-size: 1rem;
-  padding: 0.6rem;
+  padding: 0.8rem;
   border-radius: 12px;
   border: 1px solid #ff79c6;
   width: 100%;
@@ -104,44 +114,19 @@ form button {
   background: #ff79c6;
   color: #fff;
   border: none;
+  padding: 0.8rem;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
   transition: all 0.2s ease;
 }
 
-form button:hover {
-  background: #ff4fa1;
-  transform: translateY(-2px);
-}
-
-@media (max-width: 600px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  main {
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 0.75rem;
-  }
-
-  header h1 {
-    font-size: 1.5rem;
-  }
-
-  .btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
-  }
-}
-
-
-/* --- Container --- */
+/* --- Photo Detail Page --- */
 #photoDetail {
-  max-width: 600px;         /* keeps everything centered */
+  max-width: 600px;
   margin: 2rem auto;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 6px 15px rgba(255, 121, 198, 0.1);
@@ -150,57 +135,41 @@ form button:hover {
   gap: 1rem;
 }
 
-/* --- Photo --- */
 #photoDetail img {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  margin-bottom: 0.5rem;
 }
 
-/* --- Username / Caption --- */
 .posted-by {
   font-size: 0.85rem;
   color: #777;
   text-align: center;
-  margin: 0;
 }
 
 .caption {
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-align: center;
-  margin: 0;
+  font-weight: 500;
 }
 
-/* --- Comments --- */
-#commentsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-#commentsSection h3 {
-  margin: 0 0 0.25rem 0;
-}
-
+/* --- Comments & Buttons --- */
 #commentsList p {
-  margin: 0.25rem 0;
+  margin: 0.5rem 0;
   font-size: 0.9rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #fef0f7;
+  padding-bottom: 0.5rem;
 }
 
-/* --- Comment Input & Button --- */
 #commentInput,
 #addCommentBtn,
 #deletePost {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   font-size: 1rem;
   border-radius: 12px;
   border: 1px solid #ff79c6;
   box-sizing: border-box;
-  margin-top: 0.5rem;
 }
 
 #addCommentBtn,
@@ -213,15 +182,116 @@ form button:hover {
   transition: all 0.2s ease;
 }
 
-#addCommentBtn:hover,
-#deletePost:hover {
-  background: #ff4fa1;
-  transform: translateY(-2px);
+#deletePost {
+  background: #fff;
+  color: #ff4fa1;
+  margin-top: 1rem;
 }
 
-/* --- Responsive --- */
-@media (max-width: 600px) {
-  #photoDetail {
+#addCommentBtn:hover { background: #ff4fa1; }
+#deletePost:hover { background: #fff0f7; }
+
+/* --- Responsive Layout (Mobile) --- */
+@media (max-width: 800px) {
+  main {
+    column-count: 2; /* Pinterest style 2-column for tablets/phones */
+  }
+}
+
+@media (max-width: 500px) {
+  header {
+    flex-direction: column;
+    text-align: center;
     padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  main {
+    column-count: 2; /* Keep 2 columns for the "wall" look */
+    column-gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  #photoDetail {
+    width: 90%;
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+
+/* --- Login Page Styles --- */
+.login-container {
+  max-width: 400px;
+  margin: 15vh auto; /* Centers it vertically and horizontally */
+  padding: 2.5rem 2rem;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(255, 121, 198, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-container h1 {
+  color: #ff79c6;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.login-container input {
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 2px solid #fef0f7;
+  border-radius: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-container input:focus {
+  border-color: #ff79c6;
+}
+
+.login-container button {
+  background: #ff79c6;
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-container button:hover {
+  background: #ff4fa1;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 79, 161, 0.4);
+}
+
+#error {
+  font-weight: 500;
+  background: #fff0f0;
+  padding: 0.5rem;
+  border-radius: 10px;
+  margin: 0;
+}
+
+/* Make sure mobile looks good */
+@media (max-width: 500px) {
+  .login-container {
+    width: 85%;
+    margin-top: 10vh;
   }
 }
