@@ -1,43 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Photo Wall</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>📸 Photo Wall</h1>
+    <h1>get lit for recruitment! 💋🦄💄</h1>
     <a href="post.html" class="btn">Post a Photo</a>
+    <p>don't be weird on here ✌️👁️👁️🫵</p>
   </header>
 
   <main id="gallery"></main>
 
-  <script type="module">
-    import { supabase } from "./supabase.js";
+  <!-- Comments modal placeholder -->
+  <div id="commentModal" class="modal" style="display:none;"></div>
 
-    const gallery = document.getElementById("gallery");
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error(error);
-    }
-
-    data.forEach(post => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <img src="${post.image_url}" />
-        <p>${post.caption}</p>
-      `;
-
-      gallery.appendChild(card);
-    });
-  </script>
+  <!-- Main JS -->
+  <script type="module" src="gallery.js"></script>
 </body>
 </html>

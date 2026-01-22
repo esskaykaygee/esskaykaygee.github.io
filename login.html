@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Who are you?</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>Who are you?</h1>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button id="enterBtn">Enter</button>
+    <p id="error" style="color:red; display:none;">Name not recognized!</p>
+  </div>
+
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    const usernameInput = document.getElementById('username');
+    const enterBtn = document.getElementById('enterBtn');
+    const errorText = document.getElementById('error');
+
+    enterBtn.addEventListener('click', async () => {
+      const name = usernameInput.value.trim();
+
+      if (!name) return;
+
+      // Query Supabase (case-insensitive)
+      const { data, error } = await supabase
+        .from('allowed_names')
+        .select('*')
+        .ilike('name', name); // ilike = case-insensitive
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data.length > 0) {
+        // Name exists → proceed
+        localStorage.setItem('username', name); // save locally
+        window.location.href = '/';
+      } else {
+        // Name not recognized
+        errorText.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
