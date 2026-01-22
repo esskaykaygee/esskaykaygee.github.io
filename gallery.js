@@ -21,19 +21,14 @@ export async function loadPosts() {
     const card = document.createElement("div");
     card.className = "card";
 
-    const deleteBtn =
-      post.name === username
-        ? `<button class="delete-btn" data-id="${post.id}">🗑️</button>`
-        : "";
-
+    // Remove delete button completely
     card.innerHTML = `
-  <p class="posted-by">Posted by <strong>${post.name}</strong></p>
-  <a href="photo.html?id=${post.id}">
-    <img src="${post.image_url}" />
-  </a>
-  <p class="caption">${post.caption}</p>
-  ${deleteBtn}
-`;
+      <p class="posted-by">Posted by <strong>${post.name}</strong></p>
+      <a href="photo.html?id=${post.id}">
+        <img src="${post.image_url}" />
+      </a>
+      <p class="caption">${post.caption}</p>
+    `;
 
     gallery.appendChild(card);
   });
@@ -41,24 +36,16 @@ export async function loadPosts() {
 
 loadPosts();
 
+// Open comments only when clicking the image
 gallery.addEventListener("click", async (e) => {
-  const postId = e.target.dataset.id;
-  if (!postId) return;
-
-  currentPostId = postId;
-  openCommentsModal(postId);
+  if (e.target.tagName === "IMG") {
+    const postId = e.target.closest(".card").dataset.id || e.target.closest(".card").querySelector("a").href.split("id=")[1];
+    currentPostId = postId;
+    openCommentsModal(postId);
+  }
 });
 
-gallery.addEventListener("click", async (e) => {
-  if (!e.target.classList.contains("delete-btn")) return;
-
-  const postId = e.target.dataset.id;
-  const { error } = await supabase.from("posts").delete().eq("id", postId);
-
-  if (error) return console.error(error);
-  loadPosts();
-});
-
+// Comment modal functionality stays the same
 async function openCommentsModal(postId) {
   commentModal.style.display = "block";
   commentModal.innerHTML = `
