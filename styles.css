@@ -255,7 +255,6 @@ form button {
   margin: 0;
 }
 
-/* --- Responsive Layout (Mobile) --- */
 @media (max-width: 800px) {
   header h1 {
     font-size: 1.6rem;
@@ -263,27 +262,23 @@ form button {
 }
 
 @media (max-width: 500px) {
+
   /* Header */
   header {
     flex-direction: column;
-    text-align: center;
-    padding: 1rem;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
   }
 
   header h1 {
     font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   /* Gallery */
   main {
-    grid-template-columns: 1fr; /* Single column for mobile */
     gap: 0.75rem;
     padding: 0.75rem;
-  }
-
-  .card {
-    width: 100%;
   }
 
   /* Buttons */
@@ -293,15 +288,16 @@ form button {
   }
 
   /* Photo Detail & Forms */
-  #photoDetail, form {
-    width: 90%;
-    margin: 1rem auto;
+  #photoDetail,
+  form {
+    width: 100%;
+    margin: 0;
     padding: 1rem;
   }
 
-  /* Login Container */
+  /* Login */
   .login-container {
-    width: 85%;
-    margin-top: 10vh;
+    width: 90%;
+    margin: 8vh auto;
   }
 }
