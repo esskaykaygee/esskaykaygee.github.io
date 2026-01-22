@@ -1,13 +1,13 @@
 import { supabase } from "./supabase.js";
 
-const username = localStorage.getItem('username');
-if (!username) window.location.href = '/login.html';
+const username = localStorage.getItem("username");
+if (!username) window.location.href = "/login.html";
 
-const main = document.getElementById('photoDetail');
+const main = document.getElementById("photoDetail");
 
 // Get post ID from URL
 const params = new URLSearchParams(window.location.search);
-const postId = params.get('id');
+const postId = params.get("id");
 
 if (!postId) {
   main.innerHTML = "<p>No photo selected.</p>";
@@ -24,9 +24,10 @@ async function loadPost() {
   if (postError) return console.error(postError);
 
   // Only show trash icon if current user is the poster
-  const deleteBtn = post.name === username
-    ? `<button id="deletePost" class="trash-btn">🗑️ Delete Photo</button>`
-    : '';
+  const deleteBtn =
+    post.name === username
+      ? `<button id="deletePost" class="trash-btn">🗑️ Delete Photo</button>`
+      : "";
 
   main.innerHTML = `
     <p class="posted-by">Posted by <strong>${post.name}</strong></p>
@@ -53,56 +54,46 @@ async function loadComments() {
 
   if (error) return console.error(error);
 
-  commentsList.innerHTML = comments.map(c =>
-    `<p><strong>${c.username}</strong>: ${c.text}</p>`
-  ).join('');
+  commentsList.innerHTML = comments
+    .map((c) => `<p><strong>${c.username}</strong>: ${c.text}</p>`)
+    .join("");
 }
 
-// Handle clicks for comments and delete
 document.addEventListener("click", async (e) => {
-  // Add comment
   if (e.target.id === "addCommentBtn") {
     const input = document.getElementById("commentInput");
     const text = input.value.trim();
     if (!text) return;
 
-    const { error } = await supabase.from("comments").insert([{
-      post_id: postId,
-      username,
-      text
-    }]);
+    const { error } = await supabase.from("comments").insert([
+      {
+        post_id: postId,
+        username,
+        text,
+      },
+    ]);
     if (error) return console.error(error);
 
-    input.value = '';
+    input.value = "";
     loadComments();
   }
 
-if (e.target.id === "deletePost") {
   const confirmDelete = confirm("Are you sure you want to delete this post?");
   if (!confirmDelete) return;
 
-  const { error: commentError } = await supabase
-    .from("comments")
-    .delete()
-    .eq("post_id", postId);
+  e.target.innerText = "Deleting...";
+  e.target.disabled = true;
 
-  if (commentError) {
-    console.error("Error deleting comments:", commentError);
-    return;
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
+
+  if (error) {
+    console.error("Delete failed:", error);
+    alert("Error: " + error.message);
+    e.target.innerText = "🗑️ Delete Photo";
+    e.target.disabled = false;
+  } else {
+    window.location.href = "index.html";
   }
-
-  const { error: postError } = await supabase
-    .from("posts")
-    .delete()
-    .eq("id", postId);
-
-  if (postError) {
-    console.error("Error deleting post:", postError);
-    return;
-  }
-
-  window.location.href = "index.html";
-}
 });
 
 loadPost();
