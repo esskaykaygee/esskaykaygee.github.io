@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Post Photo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Post a Photo</h1>
+    <a href="index.html" class="btn">Back</a>
+  </header>
+
+  <form id="postForm">
+    <input type="file" id="image" accept="image/*" required />
+    <input type="text" id="caption" placeholder="Enter caption" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <script type="module">
+    import { supabase } from "./supabase.js";
+
+    const form = document.getElementById("postForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const file = document.getElementById("image").files[0];
+      const caption = document.getElementById("caption").value;
+
+      const fileName = `${Date.now()}-${file.name}`;
+
+      // Upload image
+      const { error: uploadError } = await supabase
+        .storage
+        .from("photos")
+        .upload(fileName, file);
+
+      if (uploadError) {
+        alert("Upload failed");
+        console.error(uploadError);
+        return;
+      }
+
+      // Get public URL
+      const { data } = supabase
+        .storage
+        .from("photos")
+        .getPublicUrl(fileName);
+
+      // Insert post
+      const { error } = await supabase
+        .from("posts")
+        .insert({
+          image_url: data.publicUrl,
+          caption: caption
+        });
+
+      if (error) {
+        console.error(error);
+        alert("Error saving post");
+        return;
+      }
+
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
