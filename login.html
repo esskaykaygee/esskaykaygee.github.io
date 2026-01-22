@@ -33,7 +33,7 @@
         const { data, error } = await supabase
           .from("allowed_names")
           .select("*")
-          .ilike("name", `%${name}%`);
+          .ilike("name", name);
 
         if (error) {
           console.error("Supabase Error:", error);
