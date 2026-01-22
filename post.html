@@ -46,16 +46,10 @@
           .from("photos")
           .getPublicUrl(fileName);
 
-        // ---- NEW: Get the user's ID from allowed_names ----
-        const username = localStorage.getItem("username"); // make sure this is set
-        if (!username) {
-          alert("You must be logged in to post.");
-          return;
-        }
-
+        // Get the user's name from allowed_names
         const { data: userRow, error: userError } = await supabase
           .from("allowed_names")
-          .select("id")
+          .select("name")
           .eq("name", username)
           .single();
 
@@ -65,13 +59,12 @@
           return;
         }
 
-        const name_id = userRow.id; // integer
+        const name = userRow.name;
 
-        // Insert post with name_id
         const { error } = await supabase.from("posts").insert({
           image_url: urlData.publicUrl,
           caption: caption,
-          name_id: name_id,
+          name: name, // store the actual name
         });
 
         if (error) {

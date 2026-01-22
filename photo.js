@@ -28,7 +28,7 @@ async function loadPost() {
     : '';
 
   main.innerHTML = `
-    <p class="posted-by">Posted by <strong>${posts.username}</strong></p>
+    <p class="posted-by">Posted by <strong>${posts.name}</strong></p>
     <img src="${posts.image_url}" />
     <p class="caption">${posts.caption}</p>
     ${deleteBtn}

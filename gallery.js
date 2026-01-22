@@ -22,12 +22,12 @@ export async function loadPosts() {
     card.className = "card";
 
     const deleteBtn =
-      post.username === username
+      post.name === username
         ? `<button class="delete-btn" data-id="${post.id}">🗑️</button>`
         : "";
 
     card.innerHTML = `
-  <p class="posted-by">Posted by <strong>${post.username}</strong></p>
+  <p class="posted-by">Posted by <strong>${post.name}</strong></p>
   <a href="photo.html?id=${post.id}">
     <img src="${post.image_url}" />
   </a>
