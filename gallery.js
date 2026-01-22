@@ -48,15 +48,6 @@ gallery.addEventListener("click", async (e) => {
 // Comment modal functionality stays the same
 async function openCommentsModal(postId) {
   commentModal.style.display = "block";
-//   commentModal.innerHTML = `
-//     <div class="modal-content">
-//       <span id="closeModal" class="close">&times;</span>
-//       <h3>Comments</h3>
-//       <div id="commentsList"></div>
-//       <input type="text" id="commentInput" placeholder="Add a comment..." />
-//       <button id="addCommentBtn">Post Comment</button>
-//     </div>
-//   `;
 
   const closeModal = document.getElementById("closeModal");
   const commentInput = document.getElementById("commentInput");
