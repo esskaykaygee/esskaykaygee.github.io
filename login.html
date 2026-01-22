@@ -1,7 +1,10 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta name="google-site-verification" content="YB0ab-PmliaxC-Zd7oAxyyJSRAsBF-903VDlOvG9Ww0" />
+    <meta
+      name="google-site-verification"
+      content="YB0ab-PmliaxC-Zd7oAxyyJSRAsBF-903VDlOvG9Ww0"
+    />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -44,7 +47,7 @@
         console.log("Database response:", data);
 
         if (data && data.length > 0) {
-          localStorage.setItem("username", data[0].name);
+          localStorage.setItem("username", name);
 
           window.location.href = "index.html";
         } else {
