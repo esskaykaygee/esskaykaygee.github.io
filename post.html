@@ -20,7 +20,7 @@
     <script type="module">
       import { supabase } from "./supabase.js";
 
-      const username = localStorage.getItem("username"); 
+      const username = localStorage.getItem("username");
       if (!username) {
         alert("You must be logged in to post.");
         window.location.href = "/login.html";
@@ -35,6 +35,7 @@
         const caption = document.getElementById("caption").value;
         const fileName = `${Date.now()}-${file.name}`;
 
+        // Upload image
         const { error: uploadError } = await supabase.storage
           .from("photos")
           .upload(fileName, file);
@@ -45,29 +46,16 @@
           return;
         }
 
+        // Get public URL
         const { data: urlData } = supabase.storage
           .from("photos")
           .getPublicUrl(fileName);
 
-        const { data: userRow, error: userError } = await supabase
-          .from("allowed_names")
-          .select("id")
-          .eq("name", username)
-          .single();
-
-        if (userError) {
-          console.error(userError);
-          alert("Could not find your user record.");
-          return;
-        }
-
-        const name_id = userRow.id;
-
+        // Insert post with the username in the 'name' column
         const { error } = await supabase.from("posts").insert({
           image_url: urlData.publicUrl,
           caption: caption,
-          name_id: name_id,
-          name: username, 
+          name: username, // just store the text
         });
 
         if (error) {
