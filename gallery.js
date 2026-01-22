@@ -36,7 +36,23 @@ export async function loadPosts() {
 
 loadPosts();
 
-// Open comments only when clicking the image
+supabase
+  .channel("posts-realtime")
+  .on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "posts",
+    },
+    (payload) => {
+      console.log("New post:", payload.new);
+      loadPosts(); 
+    }
+  )
+  .subscribe();
+
+
 gallery.addEventListener("click", async (e) => {
   if (e.target.tagName === "IMG") {
     const postId = e.target.closest(".card").dataset.id || e.target.closest(".card").querySelector("a").href.split("id=")[1];
@@ -87,4 +103,21 @@ async function openCommentsModal(postId) {
     commentsList.innerHTML += `<p><strong>${username}</strong>: ${text}</p>`;
     commentInput.value = "";
   });
+
+  supabase
+  .channel(`comments-${postId}`)
+  .on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "comments",
+      filter: `post_id=eq.${postId}`,
+    },
+    (payload) => {
+      const c = payload.new;
+      commentsList.innerHTML += `<p><strong>${c.username}</strong>: ${c.text}</p>`;
+    }
+  )
+  .subscribe();
 }
