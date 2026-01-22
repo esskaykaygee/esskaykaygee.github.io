@@ -23,7 +23,7 @@ export async function loadPosts() {
 
     // Remove delete button completely
     card.innerHTML = `
-      <p class="posted-by">Posted by <strong>${post.name}</strong></p>
+      <p class="posted-by">posted by <strong>${post.name}</strong></p>
       <a href="photo.html?id=${post.id}">
         <img src="${post.image_url}" />
       </a>

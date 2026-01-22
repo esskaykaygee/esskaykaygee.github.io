@@ -30,7 +30,7 @@ async function loadPost() {
       : "";
 
   main.innerHTML = `
-    <p class="posted-by">Posted by <strong>${post.name}</strong></p>
+    <p class="posted-by">posted by <strong>${post.name}</strong></p>
     <img src="${post.image_url}" />
     <p class="caption">${post.caption}</p>
     ${deleteBtn}
