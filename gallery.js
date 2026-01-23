@@ -6,6 +6,8 @@ if (!username) window.location.href = "/login.html";
 const gallery = document.getElementById("gallery");
 const commentModal = document.getElementById("commentModal");
 let currentPostId = null;
+const logoutLink = document.getElementById("logoutLink");
+
 
 export async function loadPosts() {
   const { data: posts, error } = await supabase
@@ -56,6 +58,12 @@ gallery.addEventListener("click", async (e) => {
     currentPostId = postId;
     openCommentsModal(postId);
   }
+});
+
+logoutLink.addEventListener("click", (e) => {
+  e.preventDefault();              
+  localStorage.removeItem("username"); 
+  window.location.href = "login.html";
 });
 
 // Comment modal functionality
