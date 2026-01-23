@@ -5,7 +5,6 @@ if (!username) window.location.href = "/login.html";
 
 const gallery = document.getElementById("gallery");
 const commentModal = document.getElementById("commentModal");
-
 let currentPostId = null;
 
 export async function loadPosts() {
@@ -21,7 +20,6 @@ export async function loadPosts() {
     const card = document.createElement("div");
     card.className = "card";
 
-    // Remove delete button completely
     card.innerHTML = `
       <p class="posted-by">posted by <strong>${post.name}</strong></p>
       <a href="photo.html?id=${post.id}">
@@ -36,32 +34,31 @@ export async function loadPosts() {
 
 loadPosts();
 
+// Realtime updates for new posts
 supabase
   .channel("posts-realtime")
   .on(
     "postgres_changes",
-    {
-      event: "INSERT",
-      schema: "public",
-      table: "posts",
-    },
+    { event: "INSERT", schema: "public", table: "posts" },
     (payload) => {
       console.log("New post:", payload.new);
-      loadPosts(); 
+      loadPosts();
     }
   )
   .subscribe();
 
-
+// Open comments modal when clicking image
 gallery.addEventListener("click", async (e) => {
   if (e.target.tagName === "IMG") {
-    const postId = e.target.closest(".card").dataset.id || e.target.closest(".card").querySelector("a").href.split("id=")[1];
+    const postId =
+      e.target.closest(".card").dataset.id ||
+      e.target.closest(".card").querySelector("a").href.split("id=")[1];
     currentPostId = postId;
     openCommentsModal(postId);
   }
 });
 
-// Comment modal functionality stays the same
+// Comment modal functionality
 async function openCommentsModal(postId) {
   commentModal.style.display = "block";
 
@@ -74,6 +71,7 @@ async function openCommentsModal(postId) {
     commentModal.style.display = "none";
   });
 
+  // Load existing comments
   const { data: comments, error } = await supabase
     .from("comments")
     .select("*")
@@ -86,6 +84,7 @@ async function openCommentsModal(postId) {
     .map((c) => `<p><strong>${c.username}</strong>: ${c.text}</p>`)
     .join("");
 
+  // Post new comment
   addCommentBtn.addEventListener("click", async () => {
     const text = commentInput.value.trim();
     if (!text) return;
@@ -93,7 +92,7 @@ async function openCommentsModal(postId) {
     const { error } = await supabase.from("comments").insert([
       {
         post_id: postId,
-        username,
+        username, // full name from localStorage
         text,
       },
     ]);
@@ -104,20 +103,21 @@ async function openCommentsModal(postId) {
     commentInput.value = "";
   });
 
+  // Realtime new comments
   supabase
-  .channel(`comments-${postId}`)
-  .on(
-    "postgres_changes",
-    {
-      event: "INSERT",
-      schema: "public",
-      table: "comments",
-      filter: `post_id=eq.${postId}`,
-    },
-    (payload) => {
-      const c = payload.new;
-      commentsList.innerHTML += `<p><strong>${c.username}</strong>: ${c.text}</p>`;
-    }
-  )
-  .subscribe();
+    .channel(`comments-${postId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "comments",
+        filter: `post_id=eq.${postId}`,
+      },
+      (payload) => {
+        const c = payload.new;
+        commentsList.innerHTML += `<p><strong>${c.username}</strong>: ${c.text}</p>`;
+      }
+    )
+    .subscribe();
 }

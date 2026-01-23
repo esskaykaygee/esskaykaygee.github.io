@@ -11,7 +11,7 @@
     <link rel="manifest" href="/site.webmanifest" />
 
     <meta charset="UTF-8" />
-    <title>who are you?</title>
+    <title>Who are you?</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -20,7 +20,7 @@
       <p>your first and last name please</p>
       <input type="text" id="username" placeholder="Enter your name" />
       <button id="enterBtn">Enter</button>
-      <p id="error" style="color: red; display: none">Name not recognized!</p>
+      <p id="error" style="color: red; display: none"></p>
     </div>
 
     <script type="module">
@@ -31,26 +31,34 @@
       const errorText = document.getElementById("error");
 
       enterBtn.addEventListener("click", async () => {
-        const name = usernameInput.value.trim();
-        if (!name) return;
+        const inputName = usernameInput.value.trim();
+        errorText.style.display = "none";
 
-        const { data, error } = await supabase
-          .from("allowed_names")
-          .select("*")
-          .ilike("name", name);
-
-        if (error) {
-          console.error("Supabase Error:", error);
+        // Require first + last name
+        if (!inputName.includes(" ")) {
+          errorText.textContent = "Please enter your first and last name.";
+          errorText.style.display = "block";
           return;
         }
 
-        console.log("Database response:", data);
+        const { data, error } = await supabase
+          .from("allowed_names")
+          .select("name")
+          .ilike("name", inputName); // exact match, case-insensitive
 
-        if (data && data.length > 0) {
-          localStorage.setItem("username", name);
+        if (error) {
+          console.error("Supabase Error:", error);
+          errorText.textContent = "Database error. Try again later.";
+          errorText.style.display = "block";
+          return;
+        }
 
+        if (data && data.length === 1) {
+          // Store canonical full name from DB
+          localStorage.setItem("username", data[0].name);
           window.location.href = "index.html";
         } else {
+          errorText.textContent = "Name not recognized!";
           errorText.style.display = "block";
         }
       });
